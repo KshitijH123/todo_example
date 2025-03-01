@@ -19,7 +19,7 @@ class _TodoInfoState extends State<TodoInfo> {
         title: const Text('Add Task'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -40,7 +40,6 @@ class _TodoInfoState extends State<TodoInfo> {
             ),
             TextField(
               controller: _descriptionController,
-              maxLines: 3,
               decoration: const InputDecoration(
                 hintText: "Enter task description",
               ),
