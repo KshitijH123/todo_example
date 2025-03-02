@@ -52,7 +52,6 @@ class _TodoInfoState extends State<TodoInfo> {
                   String description = _descriptionController.text;
 
                   if (title.isNotEmpty && description.isNotEmpty) {
-                    // Return the task data to HomePage
                     Navigator.pop(
                         context, {'title': title, 'description': description});
                   } else {
