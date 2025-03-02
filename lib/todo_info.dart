@@ -52,10 +52,9 @@ class _TodoInfoState extends State<TodoInfo> {
                   String description = _descriptionController.text;
 
                   if (title.isNotEmpty && description.isNotEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Task Added: $title")),
-                    );
-                    Navigator.pop(context);
+                    // Return the task data to HomePage
+                    Navigator.pop(
+                        context, {'title': title, 'description': description});
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Please fill all fields")),

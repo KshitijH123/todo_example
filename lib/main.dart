@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-    home: const MyHomePage(title: 'TODO MODEL'),
+    home: const HomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
