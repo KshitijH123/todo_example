@@ -52,8 +52,10 @@ class _TodoInfoState extends State<TodoInfo> {
                   String description = _descriptionController.text;
 
                   if (title.isNotEmpty && description.isNotEmpty) {
-                    Navigator.pop(
-                        context, {'title': title, 'description': description});
+                    Navigator.pop(context, {
+                      'title': title,
+                      'description': description,
+                    });
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Please fill all fields")),

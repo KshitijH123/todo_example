@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo_example/todo_info.dart';
+import 'db_helper.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -9,7 +10,21 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Map<String, String>> tasks = [];
+  List<Map<String, dynamic>> tasks = [];
+  final DatabaseHelper _dbHelper = DatabaseHelper();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTasks();
+  }
+
+  void _loadTasks() async {
+    List<Map<String, dynamic>> loadedTasks = await _dbHelper.getTasks();
+    setState(() {
+      tasks = loadedTasks;
+    });
+  }
 
   void _navigateToAddTask() async {
     final result = await Navigator.push(
@@ -18,20 +33,14 @@ class _HomePageState extends State<HomePage> {
     );
 
     if (result != null) {
-      setState(() {
-        tasks.add({
-          'title': result['title'],
-          'description': result['description'],
-        });
-      });
+      await _dbHelper.insertTask(result);
+      _loadTasks();
     }
   }
 
-  void _deleteTask(int index) {
-    setState(() {
-      tasks.removeAt(index);
-    });
-
+  void _deleteTask(int id) async {
+    await _dbHelper.deleteTask(id);
+    _loadTasks();
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Task Deleted")),
     );
@@ -57,28 +66,35 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (context, index) {
                 return Card(
                   elevation: 4,
+                  margin: const EdgeInsets.symmetric(vertical: 5),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(16.0),
-                    title: Text(
-                      tasks[index]['title']!,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                  child: SizedBox(
+                    height: 80, // Set fixed height for the card
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
                       ),
-                    ),
-                    subtitle: Text(
-                      tasks[index]['description']!,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.black54,
+                      title: Text(
+                        tasks[index]['title'],
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => _deleteTask(index),
+                      subtitle: Text(
+                        tasks[index]['description'],
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Colors.black54,
+                        ),
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => _deleteTask(tasks[index]['id']),
+                      ),
                     ),
                   ),
                 );
